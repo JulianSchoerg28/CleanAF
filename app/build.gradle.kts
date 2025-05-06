@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlinx.serialization)
-    
 
 
 }
@@ -54,6 +53,7 @@ android {
 
 dependencies {
 
+    implementation(libs.androidx.room.common.jvm)
     add("kotlinCompilerPluginClasspath", libs.androidx.compose.compiler)
 
     implementation(libs.androidx.core.ktx)

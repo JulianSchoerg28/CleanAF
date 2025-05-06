@@ -1,4 +1,4 @@
-package com.example.cleanaf.TaskViewModel.kt
+package com.example.cleanaf.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,8 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-import kotlin.text.Typography.dagger
 
 @HiltViewModel
 class TaskViewModel @Inject constructor(private val repo: TaskRepository) : ViewModel() {
