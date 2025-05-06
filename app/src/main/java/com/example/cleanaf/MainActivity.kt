@@ -1,6 +1,7 @@
 package com.example.cleanaf
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
@@ -11,7 +12,38 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.cleanaf.ui.theme.CleanAFTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
+//@AndroidEntryPoint
+//class MainActivity : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        try {
+//            setContent {
+//                CleanAFTheme {
+//                    Surface(color = MaterialTheme.colorScheme.background) {
+//                        Greeting("CleanAF")
+//                    }
+//                }
+//            }
+//        } catch (e: Exception) {
+//            Log.e("APP_CRASH", "App crashed", e)
+//            throw e
+//        }
+//    }
+//}
+//
+//@Composable
+//fun Greeting(name: String) {
+//    Text(text = "Hello, $name!")
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    CleanAFTheme {
+//        Greeting("CleanAF")
+//    }
+//}
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +52,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("CleanAF")
+                    Greeting("CleanAF - UI Only")
                 }
             }
         }
@@ -36,6 +68,6 @@ fun Greeting(name: String) {
 @Composable
 fun GreetingPreview() {
     CleanAFTheme {
-        Greeting("CleanAF")
+        Greeting("CleanAF - Preview")
     }
 }

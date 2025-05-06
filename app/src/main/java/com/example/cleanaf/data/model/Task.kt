@@ -1,3 +1,4 @@
+/*
 package com.example.cleanaf.data.model
 
 import androidx.room.Entity
@@ -13,4 +14,4 @@ data class Task(
     val interval: String, // "daily", "weekly"
     val isCompleted: Boolean = false,
     val points: Int = 0
-)
+)*/

@@ -1,20 +1,20 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt.android)
+//    alias(libs.plugins.ksp)
+//    alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlinx.serialization)
 
 }
 
 android {
     namespace = "com.example.cleanaf"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.cleanaf"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -83,19 +83,19 @@ dependencies {
     // Hilt
 //    implementation(libs.hilt.android)
 //    ksp(libs.hilt.compiler)
-    implementation("com.google.dagger:hilt-android:2.51")
-    ksp("com.google.dagger:hilt-compiler:2.51")
+//    implementation("com.google.dagger:hilt-android:2.51")
+//    ksp("com.google.dagger:hilt-compiler:2.51")
 
 
     // Room
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    ksp(libs.room.compiler)
+//    implementation(libs.room.runtime)
+//    implementation(libs.room.ktx)
+//    ksp(libs.room.compiler)
 
 
     // JSON (Kotlinx + Gson)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.gson)
+//    implementation(libs.kotlinx.serialization.json)
+//    implementation(libs.gson)
 
     implementation(platform(libs.androidx.compose.bom))
 

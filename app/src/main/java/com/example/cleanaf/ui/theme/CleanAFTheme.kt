@@ -1,3 +1,4 @@
+/*
 package com.example.cleanaf.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -30,3 +31,4 @@ fun CleanAFTheme(
         content = content
     )
 }
+*/

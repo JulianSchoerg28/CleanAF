@@ -1,3 +1,4 @@
+/*
 package com.example.cleanaf.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -25,3 +26,4 @@ class TaskViewModel @Inject constructor(private val repo: TaskRepository) : View
     fun deleteTask(task: Task) = viewModelScope.launch { repo.deleteTask(task) }
 }
 
+*/

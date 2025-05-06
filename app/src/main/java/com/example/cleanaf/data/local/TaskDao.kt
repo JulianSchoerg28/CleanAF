@@ -1,3 +1,4 @@
+/*
 package com.example.cleanaf.data.local
 
 import androidx.room.*
@@ -22,3 +23,4 @@ interface TaskDao {
     @Delete
     suspend fun deleteTask(task: Task)
 }
+*/

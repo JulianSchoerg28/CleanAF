@@ -1,7 +1,8 @@
+/*
 package com.example.cleanaf
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class CleanAFApp : Application()
+class CleanAFApp : Application()*/
