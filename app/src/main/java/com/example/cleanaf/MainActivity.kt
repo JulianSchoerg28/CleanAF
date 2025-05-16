@@ -5,14 +5,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.cleanaf.ui.model.Task
+import androidx.navigation.navArgument
+import com.example.cleanaf.data.Task
+import com.example.cleanaf.ui.screens.AddTaskScreen
 import com.example.cleanaf.ui.screens.TaskDetailScreen
 import com.example.cleanaf.ui.screens.TaskListScreen
 import com.example.cleanaf.ui.theme.CleanAFTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,25 +26,25 @@ class MainActivity : ComponentActivity() {
             CleanAFTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
-                    val tasks = listOf(
-                        Task(1, "Müll rausbringen", "Bitte Bio- und Restmüll entsorgen"),
-                        Task(2, "Küche putzen", "Arbeitsfläche, Herd und Spüle reinigen")
-                    )
+
                     NavHost(
                         navController = navController,
                         startDestination = "taskList"
                     ) {
                         composable("taskList") {
-                            TaskListScreen(
-                                tasks = tasks,
-                                onTaskClick = {
-                                    navController.navigate("taskDetail")
-                                }
-                            )
+                            TaskListScreen(navController = navController)
                         }
-                        composable("taskDetail") {
-                            TaskDetailScreen(onBack = { navController.popBackStack() })
+                        composable(
+                            "taskDetail/{taskId}",
+                            arguments = listOf(navArgument("taskId") { type = NavType.IntType })
+                        ) {
+                            val taskId = it.arguments?.getInt("taskId") ?: return@composable
+                            TaskDetailScreen(taskId = taskId, navController = navController)
                         }
+                        composable("addTask") {
+                            AddTaskScreen(navController = navController, taskViewModel = hiltViewModel())
+                        }
+
                     }
                 }
             }

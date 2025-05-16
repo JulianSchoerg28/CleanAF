@@ -8,39 +8,48 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.example.cleanaf.viewmodel.TaskViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskDetailScreen(onBack: () -> Unit) {
-    var isChecked by remember { mutableStateOf(false) }
+fun TaskDetailScreen(
+    taskId: Int,
+    navController: NavController,
+    viewModel: TaskViewModel = hiltViewModel()
+) {
+    val task = viewModel.getTaskById(taskId).collectAsState(initial = null).value
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Aufgabendetails") },
+                title = { Text("Task Details") },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Zurück")
                     }
                 }
             )
         }
     ) { padding ->
-        Column(
-            modifier = Modifier
+        if (task != null) {
+            Column(modifier = Modifier
                 .padding(padding)
-                .padding(16.dp)
-                .fillMaxSize()
-        ) {
-            Text("Müll rausbringen", style = MaterialTheme.typography.titleLarge)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text("Bitte Bio- und Restmüll entsorgen")
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(checked = isChecked, onCheckedChange = { isChecked = it })
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Aufgabe erledigt")
+                .padding(16.dp)) {
+                Text("Titel: ${task.title}", style = MaterialTheme.typography.titleLarge)
+                Spacer(Modifier.height(8.dp))
+                Text("Beschreibung: ${task.description}")
+            }
+        } else {
+            Box(modifier = Modifier
+                .padding(padding)
+                .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Task nicht gefunden.")
             }
         }
     }
 }
+

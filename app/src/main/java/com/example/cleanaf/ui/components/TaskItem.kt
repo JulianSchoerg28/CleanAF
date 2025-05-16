@@ -7,7 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.cleanaf.ui.model.Task
+import com.example.cleanaf.data.Task
 
 @Composable
 fun TaskItem(task: Task, onClick: () -> Unit) {
