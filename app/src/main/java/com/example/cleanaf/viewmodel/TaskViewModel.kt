@@ -32,7 +32,11 @@ class TaskViewModel @Inject constructor(
         return repository.getTaskById(taskId)
     }
 
-
+    fun update(task: Task) {
+        viewModelScope.launch {
+            repository.update(task)
+        }
+    }
 }
 
 data class TaskUiState(

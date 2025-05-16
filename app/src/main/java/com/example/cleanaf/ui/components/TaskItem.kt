@@ -3,35 +3,31 @@ package com.example.cleanaf.ui.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.cleanaf.data.Task
 
 @Composable
-fun TaskItem(task: Task, onClick: () -> Unit) {
-    var isChecked by remember { mutableStateOf(false) }
-
-    Card(
+fun TaskItem(
+    task: Task,
+    onTaskClick: () -> Unit,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() },
-        elevation = CardDefaults.cardElevation()
+            .clickable { onTaskClick() }
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(task.title, style = MaterialTheme.typography.titleMedium)
-                Text(task.description, style = MaterialTheme.typography.bodyMedium)
-            }
-            Checkbox(
-                checked = isChecked,
-                onCheckedChange = { isChecked = it }
-            )
+        Column(modifier = Modifier.weight(1f)) {
+            Text(text = task.title, style = MaterialTheme.typography.titleMedium)
+            Text(text = task.description, style = MaterialTheme.typography.bodyMedium)
         }
+        Checkbox(
+            checked = task.isDone,
+            onCheckedChange = onCheckedChange
+        )
     }
 }

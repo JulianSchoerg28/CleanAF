@@ -32,7 +32,13 @@ class MainActivity : ComponentActivity() {
                         startDestination = "taskList"
                     ) {
                         composable("taskList") {
-                            TaskListScreen(navController = navController)
+                            TaskListScreen(
+                                navController = navController,
+                                onTaskClick = { taskId ->
+                                    navController.navigate("taskDetail/$taskId")
+                                }
+                            )
+
                         }
                         composable(
                             "taskDetail/{taskId}",

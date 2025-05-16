@@ -24,7 +24,8 @@ import androidx.compose.material3.Icon
 @Composable
 fun TaskListScreen(
     navController: NavHostController,
-    viewModel: TaskViewModel = hiltViewModel()
+    viewModel: TaskViewModel = hiltViewModel(),
+    onTaskClick: (Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val tasks = uiState.taskList
@@ -45,12 +46,15 @@ fun TaskListScreen(
     ) { padding ->
         LazyColumn(contentPadding = padding) {
             items(tasks) { task ->
-                TaskItem(task = task) {
-                    navController.navigate("taskDetail/${task.id}")
-                }
+                TaskItem(
+                    task = task,
+                    onTaskClick = { onTaskClick(task.id) },
+                    onCheckedChange = { isChecked -> viewModel.update(task.copy(isDone = isChecked)) }
+                )
+
             }
         }
-    }
 
+    }
 }
 
