@@ -1,4 +1,3 @@
-/*
 package com.example.cleanaf.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -7,15 +6,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFF1EB980),
-    secondary = Color(0xFF7DCE82),
-    tertiary = Color(0xFF045D56)
+    primary = Color(0xFF9C27B0),
+    secondary = Color(0xFFCE93D8),
+    tertiary = Color(0xFF6A1B9A)
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF1EB980),
-    secondary = Color(0xFF7DCE82),
-    tertiary = Color(0xFF045D56)
+    primary = Color(0xFF9C27B0),
+    secondary = Color(0xFFCE93D8),
+    tertiary = Color(0xFF6A1B9A)
 )
 
 @Composable
@@ -31,4 +30,3 @@ fun CleanAFTheme(
         content = content
     )
 }
-*/
