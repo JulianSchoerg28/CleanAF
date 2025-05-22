@@ -22,7 +22,7 @@ fun TaskItem(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = task.title, style = MaterialTheme.typography.titleMedium)
+            Text(text = task.name, style = MaterialTheme.typography.titleMedium)
             Text(text = task.description, style = MaterialTheme.typography.bodyMedium)
         }
         Checkbox(

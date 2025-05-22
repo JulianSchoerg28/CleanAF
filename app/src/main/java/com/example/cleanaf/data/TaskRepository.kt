@@ -6,8 +6,8 @@ import javax.inject.Singleton
 
 @Singleton
 class TaskRepository @Inject constructor(private val dao: TaskDao) {
-//    val allTasks: Flow<List<Task>> = dao.getAllTasks()
     fun getAllTasks(): Flow<List<Task>> = dao.getAllTasks()
+
     fun getTaskById(id: Int): Flow<Task?> {
         return dao.getTaskById(id)
     }

@@ -27,8 +27,8 @@ fun TaskListScreen(
     viewModel: TaskViewModel = hiltViewModel(),
     onTaskClick: (Int) -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val tasks = uiState.taskList
+    // Hole die Tasks als State
+    val tasks by viewModel.tasks.collectAsState()
 
     Scaffold(
         topBar = {
@@ -37,9 +37,7 @@ fun TaskListScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navController.navigate("addTask") }
-            ) {
+            FloatingActionButton(onClick = { navController.navigate("addTask") }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add Task")
             }
         }
@@ -51,10 +49,9 @@ fun TaskListScreen(
                     onTaskClick = { onTaskClick(task.id) },
                     onCheckedChange = { isChecked -> viewModel.update(task.copy(isDone = isChecked)) }
                 )
-
             }
         }
-
     }
 }
+
 

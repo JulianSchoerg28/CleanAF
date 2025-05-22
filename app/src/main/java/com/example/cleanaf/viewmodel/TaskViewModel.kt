@@ -7,8 +7,9 @@ import com.example.cleanaf.data.TaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,25 +18,43 @@ class TaskViewModel @Inject constructor(
     private val repository: TaskRepository
 ) : ViewModel() {
 
-    val uiState = repository.getAllTasks()
-        .map { TaskUiState(it) }
+    val uiState: StateFlow<TaskUiState> = repository.getAllTasks()
+        .map { taskList -> TaskUiState(taskList) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TaskUiState())
 
-    fun addTask(title: String, description: String) {
-        val newTask = Task(title = title, description = description)
-        viewModelScope.launch {
-            repository.insert(newTask)
-        }
-    }
-
-    fun getTaskById(taskId: Int): Flow<Task?> {
-        return repository.getTaskById(taskId)
-    }
+    val tasks: StateFlow<List<Task>> = repository.getAllTasks()
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     fun update(task: Task) {
         viewModelScope.launch {
             repository.update(task)
         }
+    }
+
+    fun insertTask(
+        name: String,
+        description: String,
+        date: String,
+        time: String,
+        interval: String,
+        points: Int
+    ) {
+        viewModelScope.launch {
+            val newTask = Task(
+                name = name,
+                description = description,
+                date = date,
+                time = time,
+                interval = interval,
+                points = points,
+                isDone = false
+            )
+            repository.insert(newTask)
+        }
+    }
+
+    fun getTaskById(id: Int): Flow<Task?> {
+        return repository.getTaskById(id)
     }
 }
 
