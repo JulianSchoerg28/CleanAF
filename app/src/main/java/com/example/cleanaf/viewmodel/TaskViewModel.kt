@@ -31,6 +31,8 @@ class TaskViewModel @Inject constructor(
         }
     }
 
+
+    //TODO: was ist das hier alles, kann das bitte wer vernünftig machen?
     fun insertTask(
         name: String,
         description: String,
@@ -55,6 +57,12 @@ class TaskViewModel @Inject constructor(
 
     fun getTaskById(id: Int): Flow<Task?> {
         return repository.getTaskById(id)
+    }
+
+    fun deleteTask(task: Task) {
+        viewModelScope.launch {
+            repository.delete(task)
+        }
     }
 }
 

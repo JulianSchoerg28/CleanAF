@@ -1,44 +1,91 @@
 package com.example.cleanaf.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.cleanaf.viewmodel.TaskViewModel
+import com.example.cleanaf.data.Task
+import com.example.cleanaf.ui.components.TaskItem
 
+import kotlinx.coroutines.launch
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskDetailScreen(
     taskId: Int,
-    viewModel: TaskViewModel,
-    navController: NavController
+    navController: NavController,
+    viewModel: TaskViewModel = hiltViewModel()
 ) {
-    val task = viewModel.getTaskById(taskId).collectAsState(initial = null).value
+    val task by viewModel.getTaskById(taskId).collectAsState(initial = null)
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
-    task?.let {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 32.dp, start = 16.dp, end = 16.dp)
-        ) {
-            Text(text = it.name, style = MaterialTheme.typography.titleLarge)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Description: ${it.description}")
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Date: ${it.date}")
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "Time: ${it.time}")
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "Interval: ${it.interval}")
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "Points: ${it.points}")
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { navController.popBackStack() }) {
-                Text("Back")
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Task Details") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { showDeleteDialog = true }) {
+                        Icon(Icons.Default.Delete, contentDescription = "Delete Task")
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        task?.let {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp)
+            ) {
+                Text(text = it.name, style = MaterialTheme.typography.titleLarge)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "Description: ${it.description}")
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "Date: ${it.date}")
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "Time: ${it.time}")
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "Interval: ${it.interval}")
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "Points: ${it.points}")
             }
         }
-    } ?: run {
-        Text("Task not found.", modifier = Modifier.padding(16.dp))
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Delete Task") },
+            text = { Text("Are you sure you want to delete this task?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    task?.let { viewModel.deleteTask(it) }
+                    showDeleteDialog = false
+                    navController.popBackStack()
+                }) {
+                    Text("Delete")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }
