@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                         composable(route = "addTask") {
                             AddTaskScreen(
                                 navController = navController,
-                                viewModel = taskViewModel
+                                viewModel = taskViewModel,
                             )
                         }
                     }

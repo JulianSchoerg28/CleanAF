@@ -40,7 +40,7 @@ class TaskViewModel @Inject constructor(
         date: String,
         time: String,
         interval: Int,
-        points: Int
+        difficulty: String
     ) {
         viewModelScope.launch {
             val newTask = Task(
@@ -49,10 +49,19 @@ class TaskViewModel @Inject constructor(
                 date = date,
                 time = time,
                 interval = interval,
-                points = points,
+                points = pointsForDifficulty(difficulty),
                 isDone = false
             )
             repository.insert(newTask)
+        }
+    }
+
+    private fun pointsForDifficulty(difficulty: String): Int {
+        return when (difficulty) {
+            "easy" -> 10
+            "medium" -> 25
+            "hard" -> 50
+            else -> 0
         }
     }
 
@@ -69,10 +78,8 @@ class TaskViewModel @Inject constructor(
     fun onTaskChecked(task: Task, isChecked: Boolean) {
         if (isChecked) {
             viewModelScope.launch {
-                // Lösche alten Task
                 repository.delete(task)
 
-                // Wenn Intervall gesetzt, neuen Task anlegen
                 if (task.interval > 0) {
                     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                     val oldDateTime = LocalDateTime.parse("${task.date} ${task.time}", formatter)
