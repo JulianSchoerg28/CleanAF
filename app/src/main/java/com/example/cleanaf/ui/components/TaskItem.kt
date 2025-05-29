@@ -24,6 +24,10 @@ fun TaskItem(
         Column(modifier = Modifier.weight(1f)) {
             Text(text = task.name, style = MaterialTheme.typography.titleMedium)
             Text(text = task.description, style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = "${task.date} ${task.time}",
+                style = MaterialTheme.typography.bodySmall
+            )
         }
         Checkbox(
             checked = task.isDone,

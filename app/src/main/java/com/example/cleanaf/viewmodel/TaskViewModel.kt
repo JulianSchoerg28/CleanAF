@@ -1,5 +1,6 @@
 package com.example.cleanaf.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleanaf.data.Task
@@ -52,6 +53,7 @@ class TaskViewModel @Inject constructor(
                 points = pointsForDifficulty(difficulty),
                 isDone = false
             )
+
             repository.insert(newTask)
         }
     }
@@ -82,22 +84,29 @@ class TaskViewModel @Inject constructor(
 
                 if (task.interval > 0) {
                     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-                    val oldDateTime = LocalDateTime.parse("${task.date} ${task.time}", formatter)
-                    val newDateTime = oldDateTime.plusMinutes(task.interval.toLong())
+                    var newDateTime = LocalDateTime.parse("${task.date} ${task.time}", formatter)
+                    val now = LocalDateTime.now()
+
+                    do {
+                        newDateTime = newDateTime.plusMinutes(task.interval.toLong())
+                    } while (newDateTime <= now)
+
 
                     val newTask = task.copy(
-                        id = 0, // Neu ID vergeben
+                        id = 0,
                         date = newDateTime.toLocalDate().toString(),
-                        time = newDateTime.toLocalTime().toString(),
+                        time = newDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")),
                         isDone = false
                     )
+
+                    Log.d("TaskDebug", "New task created for: ${newTask.date} ${newTask.time}")
+
                     repository.insert(newTask)
                 }
             }
-        } else {
-            // Wenn abgehakt zurückgenommen: evtl. nichts tun oder Task reaktivieren
         }
     }
+
 }
 
 data class TaskUiState(
