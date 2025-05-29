@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.runtime.*
@@ -15,7 +16,6 @@ import androidx.navigation.NavController
 import com.example.cleanaf.viewmodel.TaskViewModel
 import com.example.cleanaf.data.Task
 import com.example.cleanaf.ui.components.TaskItem
-
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,11 +33,19 @@ fun TaskDetailScreen(
             TopAppBar(
                 title = { Text(text = "Task Details") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = {
+                        navController.navigate("taskList") {
+                            popUpTo(0) { inclusive = true }
+                        }                    }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
+                    IconButton(onClick = {
+                        navController.navigate("editTask/${task?.id}")
+                    }) {
+                        Icon(Icons.Default.Edit, contentDescription = "Edit Task")
+                    }
                     IconButton(onClick = { showDeleteDialog = true }) {
                         Icon(Icons.Default.Delete, contentDescription = "Delete Task")
                     }
@@ -76,7 +84,9 @@ fun TaskDetailScreen(
                 TextButton(onClick = {
                     task?.let { viewModel.deleteTask(it) }
                     showDeleteDialog = false
-                    navController.popBackStack()
+                    navController.navigate("taskList") {
+                        popUpTo("taskList") { inclusive = true }
+                    }
                 }) {
                     Text("Delete")
                 }

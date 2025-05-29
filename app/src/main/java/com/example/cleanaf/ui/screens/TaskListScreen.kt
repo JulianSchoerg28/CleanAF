@@ -28,7 +28,7 @@ fun TaskListScreen(
     viewModel: TaskViewModel = hiltViewModel(),
     onTaskClick: (Int) -> Unit
 ) {
-    val tasks by viewModel.tasks.collectAsState()
+    val tasks by viewModel.getAllTasks().collectAsState(initial = emptyList())
 
     Scaffold(
         topBar = {

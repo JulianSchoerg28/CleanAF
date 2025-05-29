@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.cleanaf.data.Task
 import com.example.cleanaf.ui.screens.AddTaskScreen
+import com.example.cleanaf.ui.screens.EditTaskScreen
 import com.example.cleanaf.ui.screens.TaskDetailScreen
 import com.example.cleanaf.ui.screens.TaskListScreen
 import com.example.cleanaf.ui.theme.CleanAFTheme
@@ -36,7 +37,7 @@ class MainActivity : ComponentActivity() {
                         composable(route = "taskList") {
                             TaskListScreen(
                                 navController = navController,
-                                viewModel = taskViewModel,      // ViewModel übergeben
+                                viewModel = taskViewModel,
                                 onTaskClick = { taskId ->
                                     navController.navigate("taskDetail/$taskId")
                                 }
@@ -59,6 +60,11 @@ class MainActivity : ComponentActivity() {
                                 viewModel = taskViewModel,
                             )
                         }
+                        composable("editTask/{taskId}") { backStackEntry ->
+                            val taskId = backStackEntry.arguments?.getString("taskId")?.toIntOrNull() ?: return@composable
+                            EditTaskScreen(taskId = taskId, navController = navController)
+                        }
+
                     }
 
                 }

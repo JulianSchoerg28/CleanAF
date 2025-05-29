@@ -28,6 +28,8 @@ class TaskViewModel @Inject constructor(
     val tasks: StateFlow<List<Task>> = repository.getAllTasks()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
+    fun getAllTasks(): Flow<List<Task>> = repository.getAllTasks()
+
     fun update(task: Task) {
         viewModelScope.launch {
             repository.update(task)
@@ -58,7 +60,7 @@ class TaskViewModel @Inject constructor(
         }
     }
 
-    private fun pointsForDifficulty(difficulty: String): Int {
+    fun pointsForDifficulty(difficulty: String): Int {
         return when (difficulty) {
             "easy" -> 10
             "medium" -> 25
