@@ -11,6 +11,6 @@ data class Task(
     val isDone: Boolean = false,
     val date: String,
     val time: String,
-    val interval: String,
+    val interval: Int,
     val points: Int
 )

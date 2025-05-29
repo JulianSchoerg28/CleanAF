@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.ui.Modifier
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,7 +28,6 @@ fun TaskListScreen(
     viewModel: TaskViewModel = hiltViewModel(),
     onTaskClick: (Int) -> Unit
 ) {
-    // Hole die Tasks als State
     val tasks by viewModel.tasks.collectAsState()
 
     Scaffold(
@@ -42,12 +42,14 @@ fun TaskListScreen(
             }
         }
     ) { padding ->
-        LazyColumn(contentPadding = padding) {
+        LazyColumn(contentPadding = padding, modifier = Modifier.fillMaxSize()) {
             items(tasks) { task ->
                 TaskItem(
                     task = task,
                     onTaskClick = { onTaskClick(task.id) },
-                    onCheckedChange = { isChecked -> viewModel.update(task.copy(isDone = isChecked)) }
+                    onCheckedChange = { checked ->
+                        viewModel.onTaskChecked(task, checked)
+                    }
                 )
             }
         }

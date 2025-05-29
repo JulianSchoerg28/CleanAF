@@ -21,10 +21,14 @@ fun AddTaskScreen(
     var description by remember { mutableStateOf("") }
     var date by remember { mutableStateOf(LocalDate.now().toString()) }
     var time by remember { mutableStateOf(LocalTime.now().withSecond(0).withNano(0).toString()) }
-    var interval by remember { mutableStateOf("") }
+    var intervalText by remember { mutableStateOf("") }
     var difficulty by remember { mutableStateOf("easy") }
 
     val difficultyOptions = listOf("easy", "medium", "hard")
+
+    val isInputValid = title.trim().isNotEmpty() &&
+            // Optional: Prüfe hier, ob date und time ein valides Format haben
+            true
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -59,16 +63,18 @@ fun AddTaskScreen(
         OutlinedTextField(
             value = time,
             onValueChange = { time = it },
-            label = { Text("Time (HH:MM)") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text("Time (HH:mm)") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
-            value = interval,
-            onValueChange = { interval = it },
-            label = { Text("Interval (e.g. daily, weekly)") },
-            modifier = Modifier.fillMaxWidth()
+            value = intervalText,
+            onValueChange = { intervalText = it.filter { c -> c.isDigit() } },
+            label = { Text("Interval in minutes") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -93,15 +99,16 @@ fun AddTaskScreen(
                     else -> 10
                 }
                 viewModel.insertTask(
-                    title,
-                    description,
-                    date,
-                    time,
-                    interval,
+                    title.trim(),
+                    description.trim(),
+                    date.trim(),
+                    time.trim(),
+                    intervalText.toIntOrNull() ?: 0,
                     points
                 )
                 navController.popBackStack()
             },
+            enabled = isInputValid,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Save")

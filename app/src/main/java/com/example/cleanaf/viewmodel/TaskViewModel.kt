@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,13 +34,12 @@ class TaskViewModel @Inject constructor(
     }
 
 
-    //TODO: was ist das hier alles, kann das bitte wer vernünftig machen?
     fun insertTask(
         name: String,
         description: String,
         date: String,
         time: String,
-        interval: String,
+        interval: Int,
         points: Int
     ) {
         viewModelScope.launch {
@@ -62,6 +63,32 @@ class TaskViewModel @Inject constructor(
     fun deleteTask(task: Task) {
         viewModelScope.launch {
             repository.delete(task)
+        }
+    }
+
+    fun onTaskChecked(task: Task, isChecked: Boolean) {
+        if (isChecked) {
+            viewModelScope.launch {
+                // Lösche alten Task
+                repository.delete(task)
+
+                // Wenn Intervall gesetzt, neuen Task anlegen
+                if (task.interval > 0) {
+                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                    val oldDateTime = LocalDateTime.parse("${task.date} ${task.time}", formatter)
+                    val newDateTime = oldDateTime.plusMinutes(task.interval.toLong())
+
+                    val newTask = task.copy(
+                        id = 0, // Neu ID vergeben
+                        date = newDateTime.toLocalDate().toString(),
+                        time = newDateTime.toLocalTime().toString(),
+                        isDone = false
+                    )
+                    repository.insert(newTask)
+                }
+            }
+        } else {
+            // Wenn abgehakt zurückgenommen: evtl. nichts tun oder Task reaktivieren
         }
     }
 }
