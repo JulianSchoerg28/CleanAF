@@ -5,6 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -12,8 +16,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.cleanaf.data.Task
+import com.example.cleanaf.datastore.SettingsDataStore
 import com.example.cleanaf.ui.screens.AddTaskScreen
 import com.example.cleanaf.ui.screens.EditTaskScreen
+import com.example.cleanaf.ui.screens.PresetTaskScreen
 import com.example.cleanaf.ui.screens.TaskDetailScreen
 import com.example.cleanaf.ui.screens.TaskListScreen
 import com.example.cleanaf.ui.theme.CleanAFTheme
@@ -25,7 +31,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CleanAFTheme {
+
+            val context = LocalContext.current
+            val darkModeFlow = remember { SettingsDataStore.readDarkMode(context) }
+            val isDarkMode by darkModeFlow.collectAsState(initial = false)
+
+            CleanAFTheme(darkTheme = isDarkMode) {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
                     val taskViewModel: TaskViewModel = hiltViewModel()
@@ -54,16 +65,34 @@ class MainActivity : ComponentActivity() {
                                 viewModel = taskViewModel
                             )
                         }
-                        composable(route = "addTask") {
+                        composable(
+                            route = "addTask?title={title}&desc={desc}&interval={interval}&difficulty={difficulty}",
+                            arguments = listOf(
+                                navArgument("title") { defaultValue = ""; nullable = true },
+                                navArgument("desc") { defaultValue = ""; nullable = true },
+                                navArgument("interval") { defaultValue = -1 },
+                                navArgument("difficulty") { defaultValue = "easy" }
+                            )
+                        ) {
+                            val args = it.arguments!!
                             AddTaskScreen(
                                 navController = navController,
                                 viewModel = taskViewModel,
+                                presetTitle = args.getString("title"),
+                                presetDescription = args.getString("desc"),
+                                presetInterval = args.getInt("interval").takeIf { it >= 0 },
+                                presetDifficulty = args.getString("difficulty")
                             )
                         }
+
                         composable("editTask/{taskId}") { backStackEntry ->
                             val taskId = backStackEntry.arguments?.getString("taskId")?.toIntOrNull() ?: return@composable
                             EditTaskScreen(taskId = taskId, navController = navController)
                         }
+                        composable("presetTasks") {
+                            PresetTaskScreen(navController = navController)
+                        }
+
 
                     }
 

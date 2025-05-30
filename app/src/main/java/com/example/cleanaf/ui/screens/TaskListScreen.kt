@@ -18,7 +18,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import com.example.cleanaf.datastore.SettingsDataStore
+import kotlinx.coroutines.launch
+import java.time.LocalDate
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,12 +42,41 @@ fun TaskListScreen(
     viewModel: TaskViewModel = hiltViewModel(),
     onTaskClick: (Int) -> Unit
 ) {
+    var showAll by remember { mutableStateOf(false) }
+    var searchText by remember { mutableStateOf("") }
+    val today = LocalDate.now().toString()
+
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val darkModeFlow = remember { SettingsDataStore.readDarkMode(context) }
+    val isDarkMode by darkModeFlow.collectAsState(initial = false)
+
     val tasks by viewModel.getAllTasks().collectAsState(initial = emptyList())
+    val filteredTasks = tasks
+        .filter { if (showAll) true else it.date == today }
+        .filter { it.name.contains(searchText, ignoreCase = true) }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Tasks") }
+                title = { Text("Tasks") },
+                actions = {
+                    TextButton(onClick = { showAll = !showAll }) {
+                        Text(if (showAll) "All" else "Today")
+                    }
+                    IconButton(onClick = {
+                        scope.launch {
+                            SettingsDataStore.saveDarkMode(context, !isDarkMode)
+                        }
+                    }) {
+                        Icon(
+                            imageVector = if (isDarkMode) Icons.Filled.LightMode else Icons.Filled.DarkMode,
+                            contentDescription = if (isDarkMode) "light mode" else "dark mode"
+                        )
+                    }
+                }
+
+
             )
         },
         floatingActionButton = {
@@ -42,18 +85,32 @@ fun TaskListScreen(
             }
         }
     ) { padding ->
-        LazyColumn(contentPadding = padding, modifier = Modifier.fillMaxSize()) {
-            items(tasks) { task ->
-                TaskItem(
-                    task = task,
-                    onTaskClick = { onTaskClick(task.id) },
-                    onCheckedChange = { checked ->
-                        viewModel.onTaskChecked(task, checked)
-                    }
-                )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            OutlinedTextField(
+                value = searchText,
+                onValueChange = { searchText = it },
+                label = { Text("Search for taskname") },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(filteredTasks) { task ->
+                    TaskItem(
+                        task = task,
+                        onTaskClick = { onTaskClick(task.id) },
+                        onCheckedChange = { checked ->
+                            viewModel.onTaskChecked(task, checked)
+                        }
+                    )
+                }
             }
         }
     }
 }
-
-
