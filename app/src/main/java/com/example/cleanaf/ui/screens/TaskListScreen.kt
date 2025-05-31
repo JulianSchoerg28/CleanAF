@@ -34,8 +34,9 @@ import java.time.LocalDate
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import com.example.cleanaf.util.PointsManager
 
 
@@ -61,10 +62,13 @@ fun TaskListScreen(
     val filteredTasks = tasks
         .filter { if (showAll) true else it.date == today }
         .filter { it.name.contains(searchText, ignoreCase = true) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
 
 
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text("Tasks") },
@@ -83,7 +87,6 @@ fun TaskListScreen(
                         )
                     }
                 }
-
 
             )
         },
@@ -123,6 +126,16 @@ fun TaskListScreen(
                         onCheckedChange = { checked ->
                             viewModel.update(task.copy(isDone = checked), context) {
                                 totalPoints.value = PointsManager.getPoints(context)
+                                if (checked) {
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            message = getRandomMotivation(),
+                                            actionLabel = null,
+                                            withDismissAction = false,
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                }
                             }
                         }
                     )
@@ -130,4 +143,16 @@ fun TaskListScreen(
             }
         }
     }
+}
+
+fun getRandomMotivation(): String {
+    val messages = listOf(
+        "Gut gemacht! 💪",
+        "Wieder was erledigt! ✅",
+        "Du bist unstoppable 🚀",
+        "To-do? To-done. 🎯",
+        "Saubere Arbeit! 🧼",
+        "Loser"
+    )
+    return messages.random()
 }
