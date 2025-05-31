@@ -33,6 +33,12 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
+import com.example.cleanaf.util.PointsManager
+
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,8 +51,8 @@ fun TaskListScreen(
     var showAll by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
     val today = LocalDate.now().toString()
-
     val context = LocalContext.current
+    val totalPoints = remember { mutableStateOf(PointsManager.getPoints(context)) }
     val scope = rememberCoroutineScope()
     val darkModeFlow = remember { SettingsDataStore.readDarkMode(context) }
     val isDarkMode by darkModeFlow.collectAsState(initial = false)
@@ -55,6 +61,8 @@ fun TaskListScreen(
     val filteredTasks = tasks
         .filter { if (showAll) true else it.date == today }
         .filter { it.name.contains(searchText, ignoreCase = true) }
+
+
 
     Scaffold(
         topBar = {
@@ -83,7 +91,8 @@ fun TaskListScreen(
             FloatingActionButton(onClick = { navController.navigate("addTask") }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add Task")
             }
-        }
+        },
+
     ) { padding ->
         Column(
             modifier = Modifier
@@ -99,6 +108,12 @@ fun TaskListScreen(
                     .fillMaxWidth()
                     .padding(16.dp)
             )
+            Text(
+                    text = "🏅 Punkte: ${totalPoints.value}",
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier
+                .padding(start = 16.dp, bottom = 8.dp)
+            )
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(filteredTasks) { task ->
@@ -106,7 +121,9 @@ fun TaskListScreen(
                         task = task,
                         onTaskClick = { onTaskClick(task.id) },
                         onCheckedChange = { checked ->
-                            viewModel.onTaskChecked(task, checked)
+                            viewModel.update(task.copy(isDone = checked), context) {
+                                totalPoints.value = PointsManager.getPoints(context)
+                            }
                         }
                     )
                 }

@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -20,6 +21,8 @@ fun EditTaskScreen(
     viewModel: TaskViewModel = hiltViewModel()
 ) {
     val task by viewModel.getTaskById(taskId).collectAsState(initial = null)
+    val context = LocalContext.current
+
 
     Scaffold(
         topBar = {
@@ -133,7 +136,7 @@ fun EditTaskScreen(
                             interval = interval,
                             points = viewModel.pointsForDifficulty(difficulty)
                         )
-                        viewModel.update(updatedTask)
+                        viewModel.update(updatedTask, context)  { }
                         navController.popBackStack()
                     },
                     enabled = isInputValid,

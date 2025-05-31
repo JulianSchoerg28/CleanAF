@@ -12,5 +12,7 @@ data class Task(
     val date: String,
     val time: String,
     val interval: Int,
-    val points: Int
+    val points: Int,
+    val pointsAwarded: Boolean = false,
+    val difficulty: String = "easy"
 )

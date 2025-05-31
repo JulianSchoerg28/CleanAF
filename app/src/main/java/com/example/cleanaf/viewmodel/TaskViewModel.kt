@@ -1,10 +1,12 @@
 package com.example.cleanaf.viewmodel
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleanaf.data.Task
 import com.example.cleanaf.data.TaskRepository
+import com.example.cleanaf.util.PointsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,11 +32,19 @@ class TaskViewModel @Inject constructor(
 
     fun getAllTasks(): Flow<List<Task>> = repository.getAllTasks()
 
-    fun update(task: Task) {
+    fun update(task: Task, context: Context, onPointsChanged: () -> Unit) {
         viewModelScope.launch {
-            repository.update(task)
+            val updatedTask = if (task.isDone && !task.pointsAwarded) {
+                PointsManager.addPoints(context, task.points)
+                onPointsChanged()
+                task.copy(pointsAwarded = true)
+            } else {
+                task
+            }
+            repository.update(updatedTask)
         }
     }
+
 
 
     fun insertTask(
@@ -53,7 +63,9 @@ class TaskViewModel @Inject constructor(
                 time = time,
                 interval = interval,
                 points = pointsForDifficulty(difficulty),
-                isDone = false
+                isDone = false,
+                pointsAwarded = false,
+                difficulty = difficulty
             )
 
             repository.insert(newTask)

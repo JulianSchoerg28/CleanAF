@@ -36,6 +36,9 @@ fun AddTaskScreen(
                 isValidTime(time)
     }
 
+    val difficultyOptions = listOf("easy", "medium", "hard")
+    val pointsAwarded: Boolean = false
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -133,7 +136,7 @@ fun AddTaskScreen(
                         date.trim(),
                         time.trim(),
                         interval,
-                        difficulty,
+                        difficulty
                     )
                     navController.navigate("taskList") {
                         popUpTo("taskList") { inclusive = true }
