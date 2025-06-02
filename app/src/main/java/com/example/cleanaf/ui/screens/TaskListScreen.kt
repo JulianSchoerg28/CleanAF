@@ -16,6 +16,7 @@ import com.example.cleanaf.ui.components.TaskItem
 import com.example.cleanaf.viewmodel.TaskViewModel
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -86,6 +87,12 @@ fun TaskListScreen(
                             contentDescription = if (isDarkMode) "light mode" else "dark mode"
                         )
                     }
+                    IconButton(onClick = {
+                        navController.navigate("calendar")
+                    }) {
+                        Icon(Icons.Default.CalendarToday, contentDescription = "Kalender")
+                    }
+
                 }
 
             )

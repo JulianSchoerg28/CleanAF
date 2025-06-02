@@ -18,6 +18,7 @@ import androidx.navigation.navArgument
 import com.example.cleanaf.data.Task
 import com.example.cleanaf.datastore.SettingsDataStore
 import com.example.cleanaf.ui.screens.AddTaskScreen
+import com.example.cleanaf.ui.screens.CalendarScreen
 import com.example.cleanaf.ui.screens.EditTaskScreen
 import com.example.cleanaf.ui.screens.PresetTaskScreen
 import com.example.cleanaf.ui.screens.TaskDetailScreen
@@ -92,6 +93,10 @@ class MainActivity : ComponentActivity() {
                         composable("presetTasks") {
                             PresetTaskScreen(navController = navController)
                         }
+                        composable("calendar") {
+                            CalendarScreen(navController = navController)
+                        }
+
 
 
                     }

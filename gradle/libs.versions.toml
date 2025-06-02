@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.3"
+compose = "2.1.0"
 datastorePreferences = "1.1.7"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
@@ -20,6 +21,7 @@ serializationJson = "1.5.1"
 [libraries]
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+compose = { module = "com.kizitonwose.calendar:compose", version.ref = "compose" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
