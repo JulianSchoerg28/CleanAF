@@ -26,8 +26,6 @@ object ReminderScheduler {
             .toInstant()
             .toEpochMilli()
 
-
-
         if (triggerTimeMillis <= System.currentTimeMillis()) return
 
         val intent = Intent(context, ReminderReceiver::class.java).apply {
