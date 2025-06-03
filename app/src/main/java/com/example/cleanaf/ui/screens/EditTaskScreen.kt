@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.cleanaf.viewmodel.TaskViewModel
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,8 +55,12 @@ fun EditTaskScreen(
             }
 
             val isInputValid = remember(title, date, time) {
-                title.isNotBlank() && isValidDate(date) && isValidTime(time)
+                title.isNotBlank() &&
+                        isValidDate(date) &&
+                        isValidTime(time) &&
+                        !isInPast(date, time)
             }
+
 
             Column(
                 modifier = Modifier
@@ -98,6 +103,13 @@ fun EditTaskScreen(
                     modifier = Modifier.fillMaxWidth(),
                     isError = time.isNotEmpty() && !isValidTime(time)
                 )
+                if (isInPast(date, time)) {
+                    Text(
+                        text = "Date or time is in past",
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
@@ -147,4 +159,16 @@ fun EditTaskScreen(
             }
         }
     }
+
+    fun isInPast(date: String, time: String): Boolean {
+        return try {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            val inputDateTime = LocalDateTime.parse("$date $time", formatter)
+            inputDateTime.isBefore(LocalDateTime.now())
+        } catch (e: Exception) {
+            false
+        }
+    }
+
 }
+

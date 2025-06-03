@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.cleanaf.viewmodel.TaskViewModel
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -31,9 +32,10 @@ fun AddTaskScreen(
     var difficulty by remember { mutableStateOf(presetDifficulty ?: "easy") }
 
     val isInputValid = remember(title, date, time) {
-        title.isNotBlank() &&
+                title.isNotBlank() &&
                 isValidDate(date) &&
-                isValidTime(time)
+                isValidTime(time) &&
+                        !isInPast(date, time)
     }
 
     val difficultyOptions = listOf("easy", "medium", "hard")
@@ -90,6 +92,7 @@ fun AddTaskScreen(
                 modifier = Modifier.fillMaxWidth(),
                 isError = date.isNotEmpty() && !isValidDate(date)
             )
+
             Spacer(modifier = Modifier.height(8.dp))
 
             OutlinedTextField(
@@ -98,9 +101,17 @@ fun AddTaskScreen(
                 label = { Text("Time (HH:mm)") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
-                isError = time.isNotEmpty() && !isValidTime(time)
+                isError = time.isNotEmpty() && (!isValidTime(time) || isInPast(date, time))
             )
             Spacer(modifier = Modifier.height(8.dp))
+            if (isInPast(date, time)) {
+                Text(
+                    text = "Date or time is in past",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
 
             OutlinedTextField(
                 value = intervalText,
@@ -168,3 +179,14 @@ fun isValidTime(time: String): Boolean {
         false
     }
 }
+
+fun isInPast(date: String, time: String): Boolean {
+    return try {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val inputDateTime = LocalDateTime.parse("$date $time", formatter)
+        inputDateTime.isBefore(LocalDateTime.now())
+    } catch (e: Exception) {
+        false
+    }
+}
+

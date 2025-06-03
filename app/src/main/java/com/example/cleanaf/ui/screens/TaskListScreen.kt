@@ -42,8 +42,6 @@ import androidx.compose.material3.SnackbarHostState
 import com.example.cleanaf.util.PointsManager
 
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
@@ -65,9 +63,6 @@ fun TaskListScreen(
         .filter { if (showAll) true else it.date == today }
         .filter { it.name.contains(searchText, ignoreCase = true) }
     val snackbarHostState = remember { SnackbarHostState() }
-
-
-
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -136,17 +131,15 @@ fun TaskListScreen(
                         task = task,
                         onTaskClick = { onTaskClick(task.id) },
                         onCheckedChange = { checked ->
-                            viewModel.update(task.copy(isDone = checked), context) {
+                            viewModel.onTaskChecked(task, checked)
+                            if (checked) {
+                                PointsManager.addPoints(context, task.points)
                                 totalPoints.value = PointsManager.getPoints(context)
-                                if (checked) {
-                                    scope.launch {
-                                        snackbarHostState.showSnackbar(
-                                            message = getRandomMotivation(),
-                                            actionLabel = null,
-                                            withDismissAction = false,
-                                            duration = SnackbarDuration.Short
-                                        )
-                                    }
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = getRandomMotivation(),
+                                        duration = SnackbarDuration.Short
+                                    )
                                 }
                             }
                         }
