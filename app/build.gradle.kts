@@ -78,6 +78,8 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.material.icons.extended)
     implementation("com.kizitonwose.calendar:compose:2.1.0")
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
+
 
 
 
