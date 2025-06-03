@@ -105,7 +105,7 @@ fun EditTaskScreen(
                 )
                 if (isInPast(date, time)) {
                     Text(
-                        text = "Datum/Uhrzeit liegt in der Vergangenheit",
+                        text = "Date or time is in past",
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodySmall
                     )
