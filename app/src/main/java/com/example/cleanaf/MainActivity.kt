@@ -21,6 +21,7 @@ import com.example.cleanaf.ui.screens.AddTaskScreen
 import com.example.cleanaf.ui.screens.CalendarScreen
 import com.example.cleanaf.ui.screens.EditTaskScreen
 import com.example.cleanaf.ui.screens.PresetTaskScreen
+import com.example.cleanaf.ui.screens.RewardScreen
 import com.example.cleanaf.ui.screens.TaskDetailScreen
 import com.example.cleanaf.ui.screens.TaskListScreen
 import com.example.cleanaf.ui.theme.CleanAFTheme
@@ -96,6 +97,10 @@ class MainActivity : ComponentActivity() {
                         composable("calendar") {
                             CalendarScreen(navController = navController)
                         }
+                        composable("rewards") {
+                            RewardScreen(navController = navController)
+                        }
+
 
 
 
