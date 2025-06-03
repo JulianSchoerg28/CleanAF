@@ -34,6 +34,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -92,6 +93,10 @@ fun TaskListScreen(
                     }) {
                         Icon(Icons.Default.CalendarToday, contentDescription = "Kalender")
                     }
+                    IconButton(onClick = { navController.navigate("rewards") }) {
+                        Icon(Icons.Default.Star, contentDescription = "Rewards")
+                    }
+
 
                 }
 
