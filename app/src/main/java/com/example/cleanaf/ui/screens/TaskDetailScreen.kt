@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -27,6 +28,7 @@ fun TaskDetailScreen(
 ) {
     val task by viewModel.getTaskById(taskId).collectAsState(initial = null)
     var showDeleteDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -82,7 +84,7 @@ fun TaskDetailScreen(
             text = { Text("Are you sure you want to delete this task?") },
             confirmButton = {
                 TextButton(onClick = {
-                    task?.let { viewModel.deleteTask(it) }
+                    task?.let { viewModel.deleteTask(it, context) }
                     showDeleteDialog = false
                     navController.navigate("taskList") {
                         popUpTo("taskList") { inclusive = true }

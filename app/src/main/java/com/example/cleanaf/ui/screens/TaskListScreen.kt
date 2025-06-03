@@ -131,7 +131,7 @@ fun TaskListScreen(
                         task = task,
                         onTaskClick = { onTaskClick(task.id) },
                         onCheckedChange = { checked ->
-                            viewModel.onTaskChecked(task, checked)
+                            viewModel.onTaskChecked(task, checked, context)
                             if (checked) {
                                 PointsManager.addPoints(context, task.points)
                                 totalPoints.value = PointsManager.getPoints(context)

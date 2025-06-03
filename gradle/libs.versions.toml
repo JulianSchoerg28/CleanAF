@@ -17,10 +17,12 @@ room = "2.4.0"
 gson = "2.11.0"
 ktor = "2.3.3"
 serializationJson = "1.5.1"
+workRuntimeKtx = "2.8.1"
 
 [libraries]
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 compose = { module = "com.kizitonwose.calendar:compose", version.ref = "compose" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }

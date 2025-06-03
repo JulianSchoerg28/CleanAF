@@ -1,11 +1,17 @@
 package com.example.cleanaf.ui.screens
 
+import android.app.AlarmManager
+import android.content.Context
+import android.content.Intent
+import android.media.audiofx.BassBoost
+import android.os.Build
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.cleanaf.viewmodel.TaskViewModel
@@ -13,6 +19,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import android.provider.Settings
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,6 +38,15 @@ fun AddTaskScreen(
     var time by remember { mutableStateOf(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))) }
     var intervalText by remember { mutableStateOf(presetInterval?.toString() ?: "") }
     var difficulty by remember { mutableStateOf(presetDifficulty ?: "easy") }
+    val context = LocalContext.current
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (!alarmManager.canScheduleExactAlarms()) {
+            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+            context.startActivity(intent)
+        }
+    }
 
     val isInputValid = remember(title, date, time) {
                 title.isNotBlank() &&
@@ -147,7 +164,8 @@ fun AddTaskScreen(
                         date.trim(),
                         time.trim(),
                         interval,
-                        difficulty
+                        difficulty,
+                        context
                     )
                     navController.navigate("taskList") {
                         popUpTo("taskList") { inclusive = true }

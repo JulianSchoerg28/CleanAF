@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
+import com.example.cleanaf.notifications.ReminderScheduler
 
 @HiltViewModel
 class TaskViewModel @Inject constructor(
@@ -41,9 +42,19 @@ class TaskViewModel @Inject constructor(
             } else {
                 task
             }
+
             repository.update(updatedTask)
+
+            ReminderScheduler.cancelReminder(context, updatedTask.name)
+            ReminderScheduler.scheduleReminder(
+                context,
+                updatedTask.name,
+                updatedTask.date,
+                updatedTask.time
+            )
         }
     }
+
 
 
 
@@ -53,7 +64,8 @@ class TaskViewModel @Inject constructor(
         date: String,
         time: String,
         interval: Int,
-        difficulty: String
+        difficulty: String,
+        context: Context
     ) {
         viewModelScope.launch {
             val newTask = Task(
@@ -69,6 +81,12 @@ class TaskViewModel @Inject constructor(
             )
 
             repository.insert(newTask)
+            com.example.cleanaf.notifications.ReminderScheduler.scheduleReminder(
+                context,
+                name,
+                date,
+                time
+            )
         }
     }
 
@@ -85,13 +103,14 @@ class TaskViewModel @Inject constructor(
         return repository.getTaskById(id)
     }
 
-    fun deleteTask(task: Task) {
+    fun deleteTask(task: Task, context: Context) {
         viewModelScope.launch {
             repository.delete(task)
+            ReminderScheduler.cancelReminder(context, task.name)
         }
     }
 
-    fun onTaskChecked(task: Task, isChecked: Boolean) {
+    fun onTaskChecked(task: Task, isChecked: Boolean, context: Context) {
         if (isChecked) {
             viewModelScope.launch {
                 repository.delete(task)
@@ -114,7 +133,7 @@ class TaskViewModel @Inject constructor(
                     )
 
                     Log.d("TaskDebug", "New task created for: ${newTask.date} ${newTask.time}")
-
+                    ReminderScheduler.cancelReminder(context, task.name)
                     repository.insert(newTask)
                 }
             }
