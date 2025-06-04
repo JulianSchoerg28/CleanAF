@@ -17,8 +17,4 @@ object PointsManager {
         return prefs.getInt(KEY_TOTAL_POINTS, 0)
     }
 
-    fun resetPoints(context: Context) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit().putInt(KEY_TOTAL_POINTS, 0).apply()
-    }
 }
