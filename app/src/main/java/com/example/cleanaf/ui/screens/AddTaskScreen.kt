@@ -51,7 +51,7 @@ fun AddTaskScreen(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             if (!isGranted) {
-                Toast.makeText(context, "Benachrichtigungen sind deaktiviert!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "notfications are deactivated!", Toast.LENGTH_SHORT).show()
             }
         }
     )
@@ -82,9 +82,6 @@ fun AddTaskScreen(
                 isValidTime(time) &&
                         !isInPast(date, time)
     }
-
-    val difficultyOptions = listOf("easy", "medium", "hard")
-    val pointsAwarded: Boolean = false
 
     Scaffold(
         topBar = {

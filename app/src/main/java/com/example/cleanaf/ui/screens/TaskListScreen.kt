@@ -152,12 +152,13 @@ fun TaskListScreen(
 
 fun getRandomMotivation(): String {
     val messages = listOf(
-        "Gut gemacht! 💪",
-        "Wieder was erledigt! ✅",
-        "Du bist unstoppable 🚀",
+        "Well done! 💪",
+        "Another one checked off! ✅",
+        "You're unstoppable 🚀",
         "To-do? To-done. 🎯",
-        "Saubere Arbeit! 🧼",
+        "Clean work! 🧼",
         "Loser"
     )
+
     return messages.random()
 }

@@ -160,15 +160,6 @@ fun EditTaskScreen(
         }
     }
 
-    fun isInPast(date: String, time: String): Boolean {
-        return try {
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-            val inputDateTime = LocalDateTime.parse("$date $time", formatter)
-            inputDateTime.isBefore(LocalDateTime.now())
-        } catch (e: Exception) {
-            false
-        }
-    }
 
 }
 

@@ -15,7 +15,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.cleanaf.data.Task
 import com.example.cleanaf.datastore.SettingsDataStore
 import com.example.cleanaf.ui.screens.AddTaskScreen
 import com.example.cleanaf.ui.screens.CalendarScreen

@@ -18,7 +18,6 @@ object AppModule {
 
     @Provides
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
-//        return Room.databaseBuilder(context, AppDatabase::class.java, "task-db").build()
         return Room.databaseBuilder(
             context.applicationContext,
             AppDatabase::class.java,

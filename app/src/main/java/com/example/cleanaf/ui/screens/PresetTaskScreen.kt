@@ -13,7 +13,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.cleanaf.viewmodel.TaskViewModel
 
-// Datenklasse für Presets
 data class PresetTask(
     val name: String,
     val description: String,

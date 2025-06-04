@@ -9,10 +9,6 @@ import com.example.cleanaf.data.TaskRepository
 import com.example.cleanaf.util.PointsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -23,14 +19,6 @@ import com.example.cleanaf.notifications.ReminderScheduler
 class TaskViewModel @Inject constructor(
     private val repository: TaskRepository
 ) : ViewModel() {
-
-    val uiState: StateFlow<TaskUiState> = repository.getAllTasks()
-        .map { taskList -> TaskUiState(taskList) }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TaskUiState())
-
-    val tasks: StateFlow<List<Task>> = repository.getAllTasks()
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-
     fun getAllTasks(): Flow<List<Task>> = repository.getAllTasks()
 
     fun update(task: Task, context: Context, onPointsChanged: () -> Unit) {
@@ -81,7 +69,7 @@ class TaskViewModel @Inject constructor(
             )
 
             repository.insert(newTask)
-            com.example.cleanaf.notifications.ReminderScheduler.scheduleReminder(
+            ReminderScheduler.scheduleReminder(
                 context,
                 name,
                 date,
@@ -142,6 +130,4 @@ class TaskViewModel @Inject constructor(
 
 }
 
-data class TaskUiState(
-    val taskList: List<Task> = emptyList()
-)
+

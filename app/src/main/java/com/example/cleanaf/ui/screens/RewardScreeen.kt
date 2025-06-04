@@ -36,7 +36,7 @@ fun RewardScreen(navController: NavController) {
             )
         }
     ) { padding ->
-        LazyColumn( // <- ersetzt Column durch LazyColumn
+        LazyColumn(
             modifier = Modifier
                 .padding(padding)
                 .padding(16.dp)
